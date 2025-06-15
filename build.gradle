@@ -1,0 +1,56 @@
+plugins {
+    id 'java'
+}
+
+group = 'ru.netology'
+version = '1.0-SNAPSHOT'
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_11
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    // JUnit 5
+    testImplementation 'org.junit.jupiter:junit-jupiter:5.10.2'
+
+    // Selenide для UI тестов
+    testImplementation 'com.codeborne:selenide:6.19.1'
+
+    // RestAssured для API тестов
+    testImplementation 'io.rest-assured:rest-assured:5.5.0'
+    testImplementation 'io.rest-assured:json-schema-validator:4.3.3'
+
+    // JavaFaker для генерации данных
+    testImplementation 'com.github.javafaker:javafaker:1.0.2'
+
+    // Gson для работы с JSON
+    implementation 'com.google.code.gson:gson:2.10.1'
+
+    // Lombok для сокращения шаблонного кода
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
+    testCompileOnly 'org.projectlombok:lombok:1.18.30'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.30'
+}
+
+tasks.withType(JavaCompile).configureEach {
+    options.encoding = 'UTF-8'
+}
+
+tasks.test {
+    useJUnitPlatform()
+
+    // Включить логирование
+    testLogging {
+        events "passed", "skipped", "failed"
+    }
+
+    // Системные свойства — например, для headless-режима Selenide
+    systemProperty 'selenide.headless', System.getProperty('selenide.headless', 'false')
+    systemProperty 'chromeoptions.prefs', System.getProperty('chromeoptions.prefs', 'profile.password_manager_leak_detection=false')
+}
