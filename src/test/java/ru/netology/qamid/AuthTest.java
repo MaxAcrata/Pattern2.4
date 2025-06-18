@@ -16,7 +16,7 @@ public class AuthTest {
     @BeforeAll
     static void setupAll() {
         Configuration.baseUrl = "http://localhost:9999";
-        Configuration.headless = true; //  false, для того чтобы видеть браузер
+        //Configuration.headless = true; //  false, для того чтобы видеть браузер
         Configuration.browserSize = "1920x1080";
     }
 
