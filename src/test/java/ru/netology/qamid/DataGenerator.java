@@ -8,7 +8,7 @@ import java.util.Locale;
  * Класс-генератор для тестовых пользователей.
  */
 public class DataGenerator {
-    private static final Faker faker = new Faker(new Locale("ru"));
+    private static final Faker faker = new Faker();
 
     /**
      * Генерирует пользователя с заданным статусом (например, "active", "blocked").
