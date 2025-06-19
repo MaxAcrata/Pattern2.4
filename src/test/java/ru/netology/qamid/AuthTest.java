@@ -7,6 +7,8 @@ import org.junit.jupiter.api.Test;
 
 import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
+import static ru.netology.qamid.DataGenerator.generateLogin;
+import static ru.netology.qamid.DataGenerator.generatePassword;
 
 /**
  * Тест на авторизацию зарегистрированного пользователя.
@@ -16,7 +18,6 @@ public class AuthTest {
     @BeforeAll
     static void setupAll() {
         Configuration.baseUrl = "http://localhost:9999";
-        //Configuration.headless = true; //  false, для того чтобы видеть браузер
         Configuration.browserSize = "1920x1080";
     }
 
@@ -25,71 +26,72 @@ public class AuthTest {
         open("/");
     }
 
+    /**
+     * Позитивный тест: авторизация активного пользователя.
+     */
     @Test
     void loginSuccessRegisteredUser() {
-        // Генерируем и регистрируем пользователя через API
+        // Генерируем и регистрируем активного пользователя через API
         RegistrationDto user = DataGenerator.generateUser("active");
         ApiHelper.registerUser(user);
 
-        // Заполняем форму входа в UI
+        // Заполняем форму входа
         $("[data-test-id=login] input").setValue(user.getLogin());
         $("[data-test-id=password] input").setValue(user.getPassword());
         $("button.button").click();
 
-        // Проверяем успешную авторизацию (заголовок/сообщение/редирект)
+        // Проверяем успешный вход
         $(".heading").shouldBe(visible).shouldHave(text("Личный кабинет"));
     }
 
+    /**
+     * Негативный тест: вход пользователя со статусом "blocked".
+     */
     @Test
     void loginWithBlockedUser() {
-        // Генерация и регистрация пользователя со статусом "blocked"
         RegistrationDto user = DataGenerator.generateUser("blocked");
         ApiHelper.registerUser(user);
 
-        // Попытка авторизации
         $("[data-test-id=login] input").setValue(user.getLogin());
         $("[data-test-id=password] input").setValue(user.getPassword());
         $("button.button").click();
 
-        // Проверка сообщения об ошибке
         $("[data-test-id=error-notification]")
                 .shouldBe(visible)
                 .shouldHave(text("Пользователь заблокирован"));
     }
 
+    /**
+     * Негативный тест: неверный логин.
+     */
     @Test
     void loginWithInvalidLogin() {
-        // Регистрируем корректного пользователя
         RegistrationDto validUser = DataGenerator.generateUser("active");
         ApiHelper.registerUser(validUser);
 
-        // Вводим несуществующий логин
-        $("[data-test-id=login] input").setValue("wrongLogin123");
+        $("[data-test-id=login] input").setValue(generateLogin()); // другой логин
         $("[data-test-id=password] input").setValue(validUser.getPassword());
         $("button.button").click();
 
-        // Проверка сообщения об ошибке
         $("[data-test-id=error-notification]")
                 .shouldBe(visible)
                 .shouldHave(text("Неверно указан логин или пароль"));
     }
 
+    /**
+     * Негативный тест: неверный пароль.
+     */
     @Test
     void loginWithInvalidPassword() {
-        // Регистрируем корректного пользователя
         RegistrationDto validUser = DataGenerator.generateUser("active");
         ApiHelper.registerUser(validUser);
 
-        // Вводим неверный пароль
         $("[data-test-id=login] input").setValue(validUser.getLogin());
-        $("[data-test-id=password] input").setValue("WrongPassword123!");
+        $("[data-test-id=password] input").setValue(generatePassword()); // другой пароль
         $("button.button").click();
 
-        // Проверка сообщения об ошибке
         $("[data-test-id=error-notification]")
                 .shouldBe(visible)
                 .shouldHave(text("Неверно указан логин или пароль"));
     }
-
-
 }
