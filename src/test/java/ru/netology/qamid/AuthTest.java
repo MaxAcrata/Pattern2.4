@@ -10,6 +10,8 @@ import static com.codeborne.selenide.Selenide.*;
 import static ru.netology.qamid.DataGenerator.generateLogin;
 import static ru.netology.qamid.DataGenerator.generatePassword;
 
+//java -jar ./artifacts/app-ibank.jar -P:profile=test
+
 /**
  * Тест на авторизацию зарегистрированного пользователя.
  */
