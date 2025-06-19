@@ -28,6 +28,10 @@ dependencies {
     // JavaFaker для генерации данных
     testImplementation 'com.github.javafaker:javafaker:1.0.2'
 
+    // Apache Commons Text
+    implementation 'org.apache.commons:commons-text:1.10.0'
+
+
     // Gson для работы с JSON
     implementation 'com.google.code.gson:gson:2.10.1'
 
